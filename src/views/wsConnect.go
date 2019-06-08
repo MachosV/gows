@@ -1,6 +1,8 @@
 package views
 
 import (
+	"fmt"
+	"hub"
 	"log"
 	"mux"
 	"net/http"
@@ -25,12 +27,13 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	log.Println("Client connected!")
+	hub.AddConnection(conn)
 	for {
-		msgType, msg, err := conn.ReadMessage()
+		_, msg, err := conn.ReadMessage()
 		if err != nil {
+			//client probably disconnected
 			return
 		}
-		log.Printf("Client sent %d %s %s\n", msgType, msg, r.RemoteAddr)
+		hub.Broadcast(fmt.Sprintf("%s: %s", msg, r.RemoteAddr))
 	}
 }

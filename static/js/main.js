@@ -13,9 +13,13 @@ ws.onerror = function(evt){
 }
 
 ws.onmessage = function(evt){
-    console.log("Received message")
+    element = document.createElement("p")
+    element.innerText = evt.data
+    document.getElementById("chatPanel").appendChild(element)
 }
 
 document.getElementById("sendButton").addEventListener("click",function(){
-    ws.send("kalimera")
+    var sendData = document.getElementById("inputArea").value
+    document.getElementById("inputArea").value = ""
+    ws.send(sendData)
 })
